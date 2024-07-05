@@ -1,5 +1,17 @@
 <?php
 /**
+ * The plugin bootstrap file
+ *
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin,
+ * registers the activation and deactivation functions, and defines a function
+ * that starts the plugin.
+ *
+ * @link              https://https://github.com/juddacammeroon
+ * @since             1.0.0
+ * @package           Maju_Admin_Blog_Notice
+ *
+ * @wordpress-plugin
  * Plugin Name: Admin Blog Notice
  * Plugin URI: https://www.linkedin.com/in/maju-comendador-40b349a6/
  * Description: WordPress Plugin that displays Blog Status Notice in Admin. Developed by Maju Comendador
@@ -9,29 +21,26 @@
  * License: GPL2
  */
 
-// Prevent direct access to the file
+/* Prevent direct access to the file */
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
+ * Currently plugin version.
+ */
+define( 'MAJU_ADMIN_BLOG_NOTICE_VERSION', '1.0.0' );
+
+/**
  * Function to run on plugin activation
  */
-function mabn_notice_activate() {
-    // Code to execute on plugin activation
-    // For example, you can add default options, create custom tables, etc.
-    // add_option( 'mabn_notice_option', 'default_value' );
-}
+function mabn_notice_activate() {}
 register_activation_hook( __FILE__, 'mabn_notice_activate' );
 
 /**
  * Function to run on plugin deactivation
  */
-function mabn_deactivate() {
-    // Code to execute on plugin deactivation
-    // For example, you can clean up settings, remove custom tables, etc.
-    // delete_option( 'mabn_notice_option' );
-}
+function mabn_deactivate() {}
 register_deactivation_hook( __FILE__, 'mabn_deactivate' );
 
 /**
@@ -53,7 +62,7 @@ add_action( 'admin_enqueue_scripts', 'mabn_enqueue_admin_styles' );
 function mabn_get_blog_posts( $posts_per_page = 10, $post_type = 'post', $post_status = 'publish' ) {
     global $wpdb;
 
-    // Prepare the query to get posts with odd IDs
+    /* Prepare the query to get posts with odd IDs */
     $query = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_type = %s AND post_status = %s AND MOD(ID, 2) = 1 ORDER BY post_modified DESC LIMIT %d", $post_type, $post_status, $posts_per_page );
     $posts = $wpdb->get_results( $query );
 
