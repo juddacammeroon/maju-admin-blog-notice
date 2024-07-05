@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 function mabn_notice_activate() {
     // Code to execute on plugin activation
     // For example, you can add default options, create custom tables, etc.
-    add_option('mabn_notice_option', 'default_value');
+    // add_option('mabn_notice_option', 'default_value');
 }
 register_activation_hook(__FILE__, 'mabn_notice_activate');
 
@@ -30,15 +30,26 @@ register_activation_hook(__FILE__, 'mabn_notice_activate');
 function mabn_deactivate() {
     // Code to execute on plugin deactivation
     // For example, you can clean up settings, remove custom tables, etc.
-    delete_option('mabn_notice_option');
+    // delete_option('mabn_notice_option');
 }
 register_deactivation_hook(__FILE__, 'mabn_deactivate');
 
+/**
+ * Function to enqueue styles
+ */
 function mabn_enqueue_admin_styles() {
     wp_enqueue_style( 'maju-admin-blog-notice', plugin_dir_url( __FILE__ ) . 'admin/css/maju-admin-blog-notice-admin.css', array(), '1.0.0', 'all' );
 }
 add_action('admin_enqueue_scripts', 'mabn_enqueue_admin_styles');
 
+/**
+ * Function to query posts
+ * @since 1.0.0
+ * @param int   $posts_per_page     Number of posts to be fetched
+ * @param string    $post_type      Post type of posts to be fetched
+ * @param string    $post_status    Status of the post to be fetched
+ * 
+ */
 function mabn_get_blog_posts($posts_per_page = 10, $post_type = 'post', $post_status = 'publish') {
 	global $wpdb;
 
@@ -46,7 +57,7 @@ function mabn_get_blog_posts($posts_per_page = 10, $post_type = 'post', $post_st
     $query = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = %s AND post_status = %s AND MOD(ID, 2) = 1 ORDER BY post_modified DESC LIMIT %d", $post_type, $post_status, $posts_per_page);
     $posts = $wpdb->get_results($query);
 
-    $map = [];
+    $map = []; // necessary data stored here
 
     if ($posts) {
     	foreach ($posts as $post) {
@@ -65,8 +76,8 @@ function mabn_get_blog_posts($posts_per_page = 10, $post_type = 'post', $post_st
  * Main function of the plugin
  */
 function mabn_function() {
-    // Your plugin code here
     ob_start();
+
     $blogs = mabn_get_blog_posts();
     ?>
 
